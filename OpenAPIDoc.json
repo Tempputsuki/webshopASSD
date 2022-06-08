@@ -1,0 +1,447 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "description":"yes",
+    "title": "login",
+    "version": "1.0",
+    "summary": "API for handling users through database"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/users/{userId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "integer"
+          },
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "Id of an existing user."
+        }
+      ],
+      "get": {
+        "summary": "Get User Info by User ID",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "User Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "Get User Alice Smith": {
+                    "value": {
+                      "id": 142,
+                      "firstName": "Alice",
+                      "lastName": "Smith",
+                      "email": "alice.smith@gmail.com",
+                      "dateOfBirth": "1997-10-31",
+                      "pwd":"****",
+                      "emailVerified": true,
+                      "signUpDate": "2019-08-24"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        },
+        "operationId": "get-users-userId",
+        "description": "Retrieve the information of the user with the matching user ID."
+      },
+      "patch": {
+        "summary": "Update User Information",
+        "operationId": "patch-users-userId",
+        "responses": {
+          "200": {
+            "description": "User Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "Updated User Rebecca Baker": {
+                    "value": {
+                      "id": 13,
+                      "firstName": "Rebecca",
+                      "lastName": "Baker",
+                      "email": "rebecca@gmail.com",
+                      "dateOfBirth": "1985-10-02",
+                      "pwd": "****",
+                      "emailVerified": false,
+                      "createDate": "2019-08-24"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User Not Found"
+          },
+          "409": {
+            "description": "Email Already Taken"
+          }
+        },
+        "description": "Update the information of an existing user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "If a new email is given, the user's email verified property will be set to false."
+                  },
+                  "dateOfBirth": {
+                    "type": "string"
+                  },
+                  "pwd": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Update First Name": {
+                  "value": {
+                    "firstName": "Rebecca"
+                  }
+                },
+                "Update Email": {
+                  "value": {
+                    "email": "rebecca@gmail.com"
+                  }
+                },
+                "Update Last Name & Date of Birth": {
+                  "value": {
+                    "lastName": "Baker",
+                    "dateOfBirth": "1985-10-02"
+                  }
+                },
+                "Update password": {
+                  "value": {
+                    "pwd": "string"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Patch user properties to update."
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "summary": "Create New User",
+        "operationId": "post-user",
+        "responses": {
+          "200": {
+            "description": "User Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "New User Bob Fellow": {
+                    "value": {
+                      "id": 12,
+                      "firstName": "Bob",
+                      "lastName": "Fellow",
+                      "email": "bob.fellow@gmail.com",
+                      "dateOfBirth": "1996-08-24",
+                      "pwd": "****",
+                      "emailVerified": false,
+                      "createDate": "2020-11-18"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing Required Information"
+          },
+          "409": {
+            "description": "Email Already Taken"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "dateOfBirth": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "pwd": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "email",
+                  "dateOfBirth"
+                ]
+              },
+              "examples": {
+                "Create User Bob Fellow": {
+                  "value": {
+                    "firstName": "Bob",
+                    "lastName": "Fellow",
+                    "email": "bob.fellow@gmail.com",
+                    "dateOfBirth": "1996-08-24",
+                    "pwd": "kalle123"
+                  }
+                },
+                "example-1": {
+                  "value": {
+                    "firstName": "string",
+                    "lastName": "string",
+                    "email": "string",
+                    "dateOfBirth": "2019-08-24",
+                    "pwd": "string"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Post the necessary fields for the API to create a new user."
+        },
+        "description": "Create a new user."
+      }
+    },
+    "/posts": {
+      "get": {
+        "summary": "Get posts by user",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "Posts found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "Honda Civic"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Used car for sale"
+                      },
+                      "category": {
+                        "type": "string",
+                        "description": "Cars"
+                      },
+                      "location": {
+                        "type": "string",
+                        "description": "Tampere"
+                      },
+                      "images": {
+                        "type": "array",
+                        "description": "[image1][image2][image3][image4]",
+                        "items": {
+                          "$ref": ""
+                        }
+                      },
+                      "askingPrice": {
+                        "type": "number",
+                        "description": "5500 price in eur"
+                      },
+                      "postingDate": {
+                        "type": "string",
+                        "description": "21.2.2021"
+                      },
+                      "deliveryType": {
+                        "type": "boolean",
+                        "description": "true= delivered, false= pickup"
+                      },
+                      "userId": {
+                        "type": "string",
+                        "description": "Kalle Testaaja"
+                      },
+                      "contactInfo": {
+                        "type": "string",
+                        "description": "phonenumber, email"
+                      },
+                      "postId": {
+                        "type": "integer",
+                        "description": "unique post id"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": [
+                      {
+                        "title": "Honda Civic",
+                        "description": "Used car",
+                        "category": "Cars",
+                        "location": "Tampere",
+                        "images": [
+                          
+                        ],
+                        "askingPrice": 5500,
+                        "postingDate": "21.2.2021",
+                        "deliveryType": true,
+                        "userId": "Kalle Testaaja",
+                        "contactInfo": "kalle.testaaja@gmail.com, 040 1111111",
+                        "postId": 5593
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {}
+          }
+        },
+        "operationId": "get-posts",
+        "description": "Gets all posts made by {userId}"
+      },
+      "patch": {
+        "summary": "Modify or create user made posts",
+        "operationId": "patch-posts",
+        "responses": {
+          "200": {
+            "description": "Information modified"
+          },
+          "404": {
+            "description": "Post Not Found"
+          }
+        },
+        "description": "Update posts",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostInformation"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete posts by user",
+        "operationId": "delete-posts",
+        "responses": {
+          "200": {
+            "description": "Post deleted"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostInformation"
+              }
+            }
+          },
+          "description": ""
+        },
+        "description": "Delete user made post"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "title": "User",
+        "type": "object",
+        "description": "",
+        "examples": [
+          {
+            "id": 142,
+            "firstName": "Alice",
+            "lastName": "Smith",
+            "email": "alice.smith@gmail.com",
+            "dateOfBirth": "1997-10-31",
+            "emailVerified": true,
+            "signUpDate": "2019-08-24"
+          }
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the given user."
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "example": "1997-10-31"
+          },
+          "emailVerified": {
+            "type": "boolean",
+            "description": "Set to true if the user's email has been verified."
+          },
+          "createDate": {
+            "type": "string",
+            "format": "date",
+            "description": "The date that the user was created."
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "pwd",
+          "email",
+          "emailVerified"
+        ]
+      },
+      "PostInformation": {
+        "$ref": "#/components/schemas/PostInformation",
+        "description": ""
+      }
+    },
+    "securitySchemes": {}
+  }
+}
